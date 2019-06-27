@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import express, { Express } from 'express';
 import http, { Server } from 'http';
 import WebSocket from 'ws';
-import JSONResponce from './helpers/JSONResponse.class';
+import JSONResponse from './helpers/JSONResponse.class';
 import log from './helpers/WinstonLogger.class';
 import SocketStorageClass from './classes/SocketStorage.class';
 
@@ -38,7 +38,7 @@ class App {
   private routes(): void {
     this.app.get('/', (req, res): void => {
       this.socket.getSocket.send('DATA');
-      JSONResponce.success(req, res, [], 'hello world!');
+      JSONResponse.success(req, res, [], 'hello world!');
     });
     this.app.get('/test', (req, res): void => {
       this.wss.clients.forEach((client): void => {
@@ -46,7 +46,7 @@ class App {
           client.send('test');
         }
       });
-      JSONResponce.success(req, res, [], 'Test started!');
+      JSONResponse.success(req, res, [], 'Test started!');
     });
   }
 
