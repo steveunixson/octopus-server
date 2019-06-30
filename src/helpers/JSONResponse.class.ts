@@ -1,6 +1,5 @@
 import express from 'express';
 
-
 export default class JSONResponse {
   public static success(
     req: express.Request,
