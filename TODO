@@ -1,0 +1,4 @@
+Create image processing class
+Create Image buffer to base64 encoder
+Create MongoDB model for saving an image as buffer and base64 string as well
+Create interface for req.image.data object

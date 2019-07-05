@@ -1,17 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 import WebSocket from 'ws';
 import log from '../helpers/WinstonLogger.class';
+import { clientArray, ClientsClass } from './Clients.class';
 
 export default class WebSocketConnection {
-  public clients: WebSocket[];
-
-  public constructor() {
-    this.clients = [];
-  }
-
-  public set SetClients(ws: WebSocket) {
-    this.clients.push(ws);
-  }
+  public clients: ClientsClass = clientArray;
 
   public ConnectionHandler(ws: WebSocket): void {
     this.connection(ws);
@@ -19,21 +12,21 @@ export default class WebSocketConnection {
 
   public connection(ws: WebSocket): void {
     log.info('CLIENT CONNECTED');
-    this.SetClients = ws;
+    this.clients.newClient(ws);
     ws.on('message', (message: string): void => {
       log.info(`received: ${message}`);
     });
     ws.on('close', (): void => {
       log.info('connection closed');
-      this.clients.pop();
+      this.clients.removeClient();
     });
   }
 
   public broadcast(): void {
-    if (this.clients.length === 0) {
+    if (this.clients.getClientsLength() === 0) {
       throw Error('NOCLIENTS');
     }
-    this.clients.forEach((client): void => {
+    this.clients.getClients().forEach((client): void => {
       if (client.readyState === WebSocket.OPEN) {
         log.debug('BROADCASTED TEST MESSAGES TO ALL CONNECTED DEVICES');
         client.send('test');

@@ -1,6 +1,4 @@
 /* eslint-disable semi */
-export default interface ImageInterface {
-  data: Buffer;
-  name: string;
-  mime: MimeType;
+export default interface ImageInterface<T> {
+  image: T;
 }
