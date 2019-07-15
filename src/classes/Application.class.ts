@@ -6,6 +6,7 @@ import http, { Server } from 'http';
 import WebSocket from 'ws';
 import fileUpload from 'express-fileupload';
 import log from '../helpers/WinstonLogger.class';
+import MongooseConnection from '../classes/MongoDBConnection.class';
 import WebSocketConnection from '../classes/WebSocketConnection.class';
 import ClientsRouter from '../routes/Clients.router';
 import FileUploadRouter from '../routes/FileUpload.router';
@@ -20,6 +21,8 @@ export default class App extends WebSocketConnection {
   public port: number;
 
   public wss: WebSocket.Server;
+
+  public mongo: MongooseConnection;
 
   public constructor(port: number) {
     super();
@@ -39,11 +42,19 @@ export default class App extends WebSocketConnection {
     this.app.use(new FileUploadRouter().router);
     this.app.use(new IndexRouter().router);
     this.app.use(new TestsRouter().router);
+    this.mongo = new MongooseConnection('mongodb://localhost:32769/octopus', {
+      useNewUrlParser: true,
+      autoReconnect: true,
+      reconnectTries: 1000000,
+      reconnectInterval: 1000,
+    });
   }
 
   public start(): void {
     try {
-      this.app.listen(this.port);
+      this.mongo.connect().then((): void => {
+        this.app.listen(this.port);
+      });
       log.info(`STARTED EXPRESS APP AT: ${this.port}`);
     } catch (exception) {
       log.error(`FAILED TO START THE APP WITH ${exception}`);

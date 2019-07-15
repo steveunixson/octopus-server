@@ -5,6 +5,7 @@
     "module": "commonjs",
     "allowJs": true,
     "outDir": "./dist",
+    "sourceMap": true,
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": ".",

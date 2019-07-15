@@ -11,4 +11,7 @@
   {"message":"FAILED TO START THE APP WITH TypeError: Cannot read property 'listen' of undefined","level":"error"},
   {"message":"FAILED TO START THE APP WITH TypeError: Cannot read property 'listen' of undefined","level":"error"},
   {"message":"FAILED TO START THE APP WITH TypeError: Cannot read property 'listen' of undefined","level":"error"},
-  {"message":"FAILED TO START THE APP WITH TypeError: Cannot read property 'listen' of undefined","level":"error"}]
+  {"message":"FAILED TO START THE APP WITH TypeError: Cannot read property 'listen' of undefined","level":"error"},
+  {"message":"ERROR: MongoNetworkError: failed to connect to server [localhost:32768] on first connect [MongoNetworkError: connect ECONNREFUSED 127.0.0.1:32768]","level":"error"},
+  {"message":"ERROR: MongoNetworkError: failed to connect to server [localhost:32768] on first connect [MongoNetworkError: connect ECONNREFUSED 127.0.0.1:32768]","level":"error"}
+]

@@ -1,4 +1,7 @@
 /* eslint-disable semi */
-export default interface ImageInterface<T> {
-  image: T;
+import { Document } from 'mongoose';
+
+export default interface ImageInterface extends Document {
+  data: Buffer;
+  name: string;
 }
