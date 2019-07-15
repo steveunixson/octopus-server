@@ -13,14 +13,26 @@ export default class FileUploadController {
           data: picture.data,
           name: picture.name,
         });
-        image.save().then((): void => {
-          JSONResponse.success(req, res, [], 'image was saved!');
-        }).catch((e): void => {
-          JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while saving a file!');
-        });
+        image.save()
+          .then((): void => {
+            JSONResponse.success(req, res, [], 'image was saved!');
+          })
+          .catch((e): void => {
+            JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while saving a file!');
+          });
       }
     } catch (e) {
       JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while uploading a file!');
     }
-  }
+  };
+
+  public getFile = (req: express.Request, res: express.Response): void => {
+    ImageSchema.findOne({ name: req.params.name })
+      .then((doc): void => {
+        JSONResponse.success(req, res, [{ doc }], 'got image');
+      })
+      .catch((e): void => {
+        JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while getting a file!');
+      });
+  };
 }

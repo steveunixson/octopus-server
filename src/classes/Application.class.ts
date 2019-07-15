@@ -5,6 +5,8 @@ import methodOverride from 'method-override';
 import http, { Server } from 'http';
 import WebSocket from 'ws';
 import fileUpload from 'express-fileupload';
+import { resolve } from 'path';
+import { config } from 'dotenv';
 import log from '../helpers/WinstonLogger.class';
 import MongooseConnection from '../classes/MongoDBConnection.class';
 import WebSocketConnection from '../classes/WebSocketConnection.class';
@@ -24,9 +26,29 @@ export default class App extends WebSocketConnection {
 
   public mongo: MongooseConnection;
 
+  public mongoPort: number;
+
   public constructor(port: number) {
     super();
-    this.port = port;
+    // TODO create config class to get rid of env validation logic in this constructor
+    config({
+      path: resolve(__dirname, '../../../.env'),
+      debug: true,
+    });
+    if (!process.env.PORT) {
+      this.port = port;
+      log.info(`NO PORT FOUND IN THE .env FILE. USING DEFAULT ${this.port} PORT`);
+    } else {
+      this.port = Number(process.env.PORT);
+      log.info(`USING ${this.port} PORT`);
+    }
+    if (process.env.MONGOPORT) {
+      this.mongoPort = Number(process.env.MONGOPORT);
+      log.info(`CONNECTED TO MONGODB AT ${this.mongoPort}`);
+    } else {
+      this.mongoPort = 27017;
+      log.info(`NO MONGODB PORT FOUND IN THE .env FILE. USING DEFAULT ${this.mongoPort} PORT`);
+    }
     this.app = express();
     this.app.use(methodOverride());
     this.app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,7 +64,7 @@ export default class App extends WebSocketConnection {
     this.app.use(new FileUploadRouter().router);
     this.app.use(new IndexRouter().router);
     this.app.use(new TestsRouter().router);
-    this.mongo = new MongooseConnection('mongodb://localhost:32769/octopus', {
+    this.mongo = new MongooseConnection(`mongodb://localhost:${this.mongoPort}/octopus`, {
       useNewUrlParser: true,
       autoReconnect: true,
       reconnectTries: 1000000,
