@@ -1,26 +1,20 @@
 import WebSocket from 'ws';
 import UUIDClass from '../helpers/UUID.class';
-
-interface ClientIDInterface extends WebSocket {
-  clientId: string;
-}
-
+import ClientInterface from '../interfaces/Client.interface';
 // please dear IDEA just commit it
 
 export class ClientsClass {
-  public clients: WebSocket[] = [];
+  public clients: ClientInterface[] = [];
 
   public getClientsLength(): number {
     return this.clients.length;
   }
 
-  public getClients(): WebSocket[] {
+  public getClients(): ClientInterface[] {
     return this.clients;
   }
 
   public getClientByID(id: number): WebSocket {
-    const ID = this.clients[id] as ClientIDInterface;
-    console.log(ID.clientId);
     return this.clients[id];
   }
 
@@ -28,8 +22,8 @@ export class ClientsClass {
     this.clients.pop();
   }
 
-  public newClient(ws: WebSocket): void {
-    Object.defineProperty(ws, 'clientId', {
+  public newClient(ws: ClientInterface): void {
+    Object.defineProperty(ws, 'deviceDescriptor', {
       value: UUIDClass.generateUUID(), writable: true, enumerable: true, configurable: true,
     });
     this.clients.push(ws);

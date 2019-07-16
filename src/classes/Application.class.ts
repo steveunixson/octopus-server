@@ -14,41 +14,32 @@ import ClientsRouter from '../routes/Clients.router';
 import FileUploadRouter from '../routes/FileUpload.router';
 import IndexRouter from '../routes/Index.router';
 import TestsRouter from '../routes/Tests.router';
+import ConfigClass from './Config.class';
 
 export default class App extends WebSocketConnection {
-  public readonly app: Express;
+  private readonly app: Express;
 
-  public readonly server: Server;
+  private readonly server: Server;
 
-  public port: number;
+  private readonly port: number;
 
-  public wss: WebSocket.Server;
+  private wss: WebSocket.Server;
 
-  public mongo: MongooseConnection;
+  private mongo: MongooseConnection;
 
-  public mongoPort: number;
+  private readonly mongoPort: number;
 
-  public constructor(port: number) {
+  private config: ConfigClass;
+
+  public constructor() {
     super();
-    // TODO create config class to get rid of env validation logic in this constructor
     config({
       path: resolve(__dirname, '../../../.env'),
       debug: true,
     });
-    if (!process.env.PORT) {
-      this.port = port;
-      log.info(`NO PORT FOUND IN THE .env FILE. USING DEFAULT ${this.port} PORT`);
-    } else {
-      this.port = Number(process.env.PORT);
-      log.info(`USING ${this.port} PORT`);
-    }
-    if (process.env.MONGOPORT) {
-      this.mongoPort = Number(process.env.MONGOPORT);
-      log.info(`CONNECTED TO MONGODB AT ${this.mongoPort}`);
-    } else {
-      this.mongoPort = 27017;
-      log.info(`NO MONGODB PORT FOUND IN THE .env FILE. USING DEFAULT ${this.mongoPort} PORT`);
-    }
+    this.config = new ConfigClass();
+    this.port = this.config.PORT();
+    this.mongoPort = this.config.MONGO();
     this.app = express();
     this.app.use(methodOverride());
     this.app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,7 +49,7 @@ export default class App extends WebSocketConnection {
     }));
     this.app.use(morgan('dev'));
     this.server = http.createServer(this.app);
-    this.wss = new WebSocket.Server({ server: this.server, port: 9020 });
+    this.wss = new WebSocket.Server({ server: this.server, port: this.config.SOCKET() });
     this.wss.on('connection', this.ConnectionHandler.bind(this));
     this.app.use(new ClientsRouter().router);
     this.app.use(new FileUploadRouter().router);

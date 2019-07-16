@@ -15,3 +15,4 @@
   {"message":"ERROR: MongoNetworkError: failed to connect to server [localhost:32768] on first connect [MongoNetworkError: connect ECONNREFUSED 127.0.0.1:32768]","level":"error"},
   {"message":"ERROR: MongoNetworkError: failed to connect to server [localhost:32768] on first connect [MongoNetworkError: connect ECONNREFUSED 127.0.0.1:32768]","level":"error"}
 ]
+{"message":"ERROR: MongoNetworkError: failed to connect to server [localhost:27017] on first connect [MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017]","level":"error"}

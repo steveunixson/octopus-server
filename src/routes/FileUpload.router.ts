@@ -13,7 +13,7 @@ export default class FileUploadRouter extends FileUploadController {
 
   public initializeRoutes(): void {
     // add routers here
-    this.router.post(`${this.path}/image`, this.uploadFile);
-    this.router.get('/image/:name', this.getFile);
+    this.router.post(`${this.path}/image`, this.uploadImage);
+    this.router.get('/image/:name', this.getImage);
   }
 }

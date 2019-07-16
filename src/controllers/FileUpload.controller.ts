@@ -4,29 +4,26 @@ import JSONResponse from '../helpers/JSONResponse.class';
 import ImageSchema from '../models/Images.model';
 
 export default class FileUploadController {
-  public uploadFile = (req: express.Request, res: express.Response): void => {
-    try {
-      if (req.files && req.files.image) {
-        const picture = req.files.image as UploadedFile;
-        // used type casting here!
-        const image = new ImageSchema({
-          data: picture.data,
-          name: picture.name,
+  public uploadImage = (req: express.Request, res: express.Response): void => {
+    if (req.files && req.files.image) {
+      const picture = req.files.image as UploadedFile;
+      // used type casting here!
+      const image = new ImageSchema({
+        data: picture.data,
+        name: picture.name,
+      });
+      image.save()
+        .then((): void => {
+          JSONResponse.success(req, res, [], 'image was saved!');
+        })
+        .catch((e): void => {
+          JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while saving a file!');
         });
-        image.save()
-          .then((): void => {
-            JSONResponse.success(req, res, [], 'image was saved!');
-          })
-          .catch((e): void => {
-            JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while saving a file!');
-          });
-      }
-    } catch (e) {
-      JSONResponse.serverError(req, res, [{ error: e.toString() }], 'Got an error while uploading a file!');
     }
+    JSONResponse.serverError(req, res, [{ error: 'NOFILE' }], 'You have to upload a file!');
   };
 
-  public getFile = (req: express.Request, res: express.Response): void => {
+  public getImage = (req: express.Request, res: express.Response): void => {
     ImageSchema.findOne({ name: req.params.name })
       .then((doc): void => {
         JSONResponse.success(req, res, [{ doc }], 'got image');

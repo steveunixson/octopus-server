@@ -2,15 +2,16 @@
 import WebSocket from 'ws';
 import log from '../helpers/WinstonLogger.class';
 import { clientArray, ClientsClass } from './Clients.class';
+import ClientInterface from '../interfaces/Client.interface';
 
 export default class WebSocketConnection {
   public clients: ClientsClass = clientArray;
 
-  public ConnectionHandler(ws: WebSocket): void {
+  public ConnectionHandler(ws: ClientInterface): void {
     this.connection(ws);
   }
 
-  public connection(ws: WebSocket): void {
+  public connection(ws: ClientInterface): void {
     log.info('CLIENT CONNECTED');
     this.clients.newClient(ws);
     ws.on('message', (message: string): void => {

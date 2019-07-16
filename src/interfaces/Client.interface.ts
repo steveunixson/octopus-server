@@ -1,5 +1,7 @@
 /* eslint-disable semi */
-export default interface ClientInterface {
+import WebSocket from 'ws';
+
+export default interface ClientInterface extends WebSocket {
   deviceDescriptor: string;
   name: string;
   os: string;
